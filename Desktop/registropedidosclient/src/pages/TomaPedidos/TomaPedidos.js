@@ -4,6 +4,7 @@ import './TomaPedidos.css';
 const TomaDePedidos = ({ setMostrarBotones }) => {
   const [pedido, setPedido] = useState({
     mesero: '',
+    mesa: '',
     producto: '',
     cantidad: 0,
     categoria: '',
@@ -22,18 +23,26 @@ const TomaDePedidos = ({ setMostrarBotones }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('URL_DEL_API', {
+      const response = await fetch('http://localhost:3000/toma-de-pedidos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(pedido),
+        body: JSON.stringify({
+          mesero: pedido.mesero,
+          mesa: pedido.mesa,
+          producto: pedido.producto,
+          cantidad: pedido.cantidad,
+          categoria: pedido.categoria,
+          precio: pedido.precio
+        }),
       });
 
       if (response.ok) {
         console.log('Pedido enviado con éxito');
         setPedido({
           mesero: '',
+          mesa: '',
           producto: '',
           cantidad: 0,
           categoria: '',
@@ -59,6 +68,11 @@ const TomaDePedidos = ({ setMostrarBotones }) => {
         <label>
           Mesero:
           <input type="text" name="mesero" value={pedido.mesero} onChange={handleChange} />
+        </label>
+        <br />
+        <label>
+          Mesa:
+          <input type="text" name="mesa" value={pedido.mesa} onChange={handleChange} />
         </label>
         <br />
         <label>

@@ -2,21 +2,20 @@ import React, { useEffect, useState } from 'react';
 import './ListadoPedidos.css';
 
 const ListadoDePedidos = ({ setMostrarBotones }) => {
-  const [pedidos, setPedidos] = useState([]); // Estado para almacenar los pedidos
+  const [pedidos, setPedidos] = useState([]); 
 
   useEffect(() => {
     setMostrarBotones(false);
-    // Llamar a la función para cargar los pedidos al cargar el componente
     cargarPedidos();
     return () => {
       setMostrarBotones(true);
     };
   }, [setMostrarBotones]);
 
-  // Función para cargar los pedidos
+
   const cargarPedidos = async () => {
     try {
-      const response = await fetch('URL_DEL_API', {
+      const response = await fetch('http://localhost:3000/toma-de-pedidos', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
