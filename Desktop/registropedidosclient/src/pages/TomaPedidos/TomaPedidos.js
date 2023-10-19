@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import './TomaPedidos.css'
+import './TomaPedidos.css';
+
 const TomaDePedidos = ({ setMostrarBotones }) => {
   const [pedido, setPedido] = useState({
     mesero: '',
-    mesa: '',
     producto: '',
     cantidad: 0,
     categoria: '',
@@ -11,7 +11,6 @@ const TomaDePedidos = ({ setMostrarBotones }) => {
   });
 
   useEffect(() => {
-   
     setMostrarBotones(false);
 
     return () => {
@@ -19,10 +18,33 @@ const TomaDePedidos = ({ setMostrarBotones }) => {
     };
   }, [setMostrarBotones]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('Formulario enviado:', pedido);
+    try {
+      const response = await fetch('URL_DEL_API', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(pedido),
+      });
+
+      if (response.ok) {
+        console.log('Pedido enviado con éxito');
+        setPedido({
+          mesero: '',
+          producto: '',
+          cantidad: 0,
+          categoria: '',
+          precio: ''
+        });
+      } else {
+        console.error('Error al enviar el pedido');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const handleChange = (e) => {
@@ -37,11 +59,6 @@ const TomaDePedidos = ({ setMostrarBotones }) => {
         <label>
           Mesero:
           <input type="text" name="mesero" value={pedido.mesero} onChange={handleChange} />
-        </label>
-        <br />
-        <label>
-          #Mesa:
-          <input type="text" name="mesa" value={pedido.mesa} onChange={handleChange} />
         </label>
         <br />
         <label>

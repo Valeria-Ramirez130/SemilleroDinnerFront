@@ -1,14 +1,38 @@
-import React, { useEffect } from 'react';
-import './ListadoPedidos.css'
+import React, { useEffect, useState } from 'react';
+import './ListadoPedidos.css';
 
 const ListadoDePedidos = ({ setMostrarBotones }) => {
+  const [pedidos, setPedidos] = useState([]); // Estado para almacenar los pedidos
+
   useEffect(() => {
     setMostrarBotones(false);
-
+    // Llamar a la función para cargar los pedidos al cargar el componente
+    cargarPedidos();
     return () => {
       setMostrarBotones(true);
     };
   }, [setMostrarBotones]);
+
+  // Función para cargar los pedidos
+  const cargarPedidos = async () => {
+    try {
+      const response = await fetch('URL_DEL_API', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPedidos(data);
+      } else {
+        console.error('Error al cargar los pedidos');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <div className="listado-pedidos">
@@ -16,6 +40,7 @@ const ListadoDePedidos = ({ setMostrarBotones }) => {
       <table>
         <thead>
           <tr>
+            <th>Mesero</th>
             <th>#Mesa</th>
             <th>Producto</th>
             <th>Cantidad</th>
@@ -23,6 +48,18 @@ const ListadoDePedidos = ({ setMostrarBotones }) => {
             <th>Precio</th>
           </tr>
         </thead>
+        <tbody>
+          {pedidos.map((pedido) => (
+            <tr key={pedido.id}>
+              <td>{pedido.mesero}</td>
+              <td>{pedido.mesa}</td>
+              <td>{pedido.producto}</td>
+              <td>{pedido.cantidad}</td>
+              <td>{pedido.categoria}</td>
+              <td>{pedido.precio}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );
